@@ -6,7 +6,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-
+using OpenQA.Selenium.Support.UI;
 
 namespace LearningSelenium
 {
@@ -19,14 +19,38 @@ namespace LearningSelenium
             IWebDriver driver = new ChromeDriver();
             driver.Navigate().GoToUrl("http://www.wikipedia.com");
             driver.Manage().Window.Maximize();
-            List<String> textofanchors = new List<string>();
-            ReadOnlyCollection<IWebElement> anchorLists = driver.FindElements(By.TagName("a"));
-            foreach(IWebElement anchor in anchorLists)
+            List<string> CentralLanguages = new List<string>();
+            ReadOnlyCollection<IWebElement> languages = driver.FindElements(By.ClassName("central-featured-lang"));
+            foreach(IWebElement language in languages)
             {
-                textofanchors.Add(anchor.Text);
+                string lang = language.Text;
+                lang = lang.Substring(0, lang.LastIndexOf("\r"));
+                CentralLanguages.Add(lang);
             }
+
+            SelectElement selectLanguage = new SelectElement(driver.FindElement(By.Id("searchLanguage")));
+            selectLanguage.SelectByText("Deutsch");
+            selectLanguage.SelectByValue("be");
+            selectLanguage.SelectByIndex(0);
+
+            #region
+            //List<String> textofanchors = new List<string>();
+            //ReadOnlyCollection<IWebElement> anchorLists = driver.FindElements(By.TagName("a"));
+            //foreach(IWebElement anchor in anchorLists)
+            //{
+            //    if(anchor.Text.Length > 0)
+            //    {
+            //        if(anchor.Text.Contains("English"))
+            //        {
+            //            textofanchors.Add(anchor.Text);
+            //            anchor.Click();
+            //        }
+            //    }
+
+            //}
             //driver.FindElement(By.Id("searchInput")).SendKeys("Selenium");
             //driver.FindElement(By.ClassName("pure-button")).Click();
+            #endregion
             driver.Quit();
         }
         [TestMethod]
